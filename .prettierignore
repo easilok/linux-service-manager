@@ -1,0 +1,9 @@
+build
+node_modules
+public
+dist
+frontend
+docker
+
+# Ignore all HTML files:
+*.html

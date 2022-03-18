@@ -1,0 +1,5 @@
+{
+  "env": {
+    "SERVICES_JSON_OUTPUT_":true
+  }
+}
