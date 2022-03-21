@@ -8,14 +8,16 @@ import { exec } from 'child_process';
 // list all loaded services - systemctl list-units --type=service
 // list all loaded running services - systemctl list-units --type=service --state=running
 
-const SYSTEMD_LIST_RUNNING = `systemctl list-units --type=service --state=running,exited,failed --legend=false --no-pager ${process.env.SERVICES_JSON_OUTPUT === undefined
-  ? " --plain | sed 's/ \\{1,\\}/,/g'"
-  : ' --output json'
-  }`;
-const SYSTEMD_LIST_UNITS = `systemctl list-unit-files --type=service --state=enabled,disabled --legend=false --no-pager ${process.env.SERVICES_JSON_OUTPUT === undefined
-  ? " --plain | sed 's/ \\{1,\\}/,/g'"
-  : ' --output json'
-  }`;
+const SYSTEMD_LIST_RUNNING = `systemctl list-units --type=service --state=running,exited,failed --legend=false --no-pager ${
+  process.env.SERVICES_JSON_OUTPUT === undefined
+    ? " --plain | sed 's/ \\{1,\\}/,/g'"
+    : ' --output json'
+}`;
+const SYSTEMD_LIST_UNITS = `systemctl list-unit-files --type=service --state=enabled,disabled --legend=false --no-pager ${
+  process.env.SERVICES_JSON_OUTPUT === undefined
+    ? " --plain | sed 's/ \\{1,\\}/,/g'"
+    : ' --output json'
+}`;
 
 const SYSTEMD_RESTART_UNIT = `systemctl restart `;
 const SYSTEMD_STOP_UNIT = `systemctl stop `;
@@ -45,7 +47,7 @@ export function parseUnitList(
 
   const newUnitList = [...existingUnits];
 
-  unitList.forEach((unit, index) => {
+  unitList.forEach((unit, _index) => {
     unit = unit.trim();
     if (unit.length > 0 && unit.includes(',')) {
       // console.log(`Unit ${index}: `, unit)
@@ -108,10 +110,14 @@ export function parseRunningUnitList(
           newUnitList[existingIndex].state = newUnit.state;
         }
       } else {
-        console.warn(`Failed to parse unit ${unit} because of missing field count`);
+        console.warn(
+          `Failed to parse unit ${unit} because of missing field count`
+        );
       }
     } else {
-      console.warn(`Failed to parse unit ${index}: ${unit} because of missing comma separation`);
+      console.warn(
+        `Failed to parse unit ${index}: ${unit} because of missing comma separation`
+      );
     }
   });
 
@@ -124,10 +130,12 @@ export function buildSystemUnitList(): Promise<SystemdUnitList[]> {
     exec(SYSTEMD_LIST_RUNNING, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
+
         return reject(error);
       }
       if (stderr) {
         console.log(`stderr: ${stderr}`);
+
         return reject(stderr);
       }
 
@@ -149,10 +157,12 @@ export function buildSystemUnitList(): Promise<SystemdUnitList[]> {
       exec(SYSTEMD_LIST_UNITS, (error, stdout, stderr) => {
         if (error) {
           console.log(`error: ${error.message}`);
+
           return reject(error);
         }
         if (stderr) {
           console.log(`stderr: ${stderr}`);
+
           return reject(stderr);
         }
 
@@ -196,10 +206,12 @@ export function restartSystemdUnit(unit: string): Promise<string> {
     exec(SYSTEMD_RESTART_UNIT + unit, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
+
         return reject(error);
       }
       if (stderr) {
         console.log(`stderr: ${stderr}`);
+
         return reject(stderr);
       }
 
@@ -214,10 +226,12 @@ export function stopSystemdUnit(unit: string): Promise<string> {
     exec(SYSTEMD_STOP_UNIT + unit, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
+
         return reject(error);
       }
       if (stderr) {
         console.log(`stderr: ${stderr}`);
+
         return reject(stderr);
       }
 
@@ -232,10 +246,12 @@ export function startSystemdUnit(unit: string): Promise<string> {
     exec(SYSTEMD_START_UNIT + unit, (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`);
+
         return reject(error.message);
       }
       if (stderr) {
         console.log(`stderr: ${stderr}`);
+
         return reject(stderr);
       }
 

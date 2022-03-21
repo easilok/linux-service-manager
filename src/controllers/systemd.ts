@@ -51,6 +51,7 @@ export const restartUnit: RequestHandler = (req, res, next) => {
   restartSystemdUnit(unit)
     .then((result) => {
       console.log(`Restart ${unit} result: `, result);
+
       return res.status(200).json({
         message: `Unit ${unit} restarted`,
       });
@@ -82,6 +83,7 @@ export const stopUnit: RequestHandler = (req, res, next) => {
   stopSystemdUnit(unit)
     .then((result) => {
       console.log(`Stop ${unit} result: `, result);
+
       return res.status(200).json({
         message: `Unit ${unit} stopped`,
       });
@@ -114,6 +116,7 @@ export const startUnit: RequestHandler = (req, res, next) => {
   startSystemdUnit(unit)
     .then((result) => {
       console.log(`Start ${unit} result: `, result);
+
       return res.status(200).json({
         message: `Unit ${unit} started`,
       });
