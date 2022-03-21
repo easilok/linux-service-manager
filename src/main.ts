@@ -1,3 +1,10 @@
+// Env variables loading
+// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
+const dotenvResult = dotenv.config();
+if (dotenvResult.error) {
+  throw dotenvResult.error;
+}
 // Node Core Modules
 import path from 'path';
 import fs from 'fs';
@@ -41,7 +48,6 @@ app.use('*', (_req, res, _next) => {
   res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
 });
 
-
 app.use(
   (
     error: CustomError,
@@ -66,11 +72,14 @@ app.use(
   }
 );
 
-
-console.log("Process running with id: ", process.getuid());
-console.log("Process running with uid: ", process.geteuid());
-process.setuid(0);
-process.seteuid(0);
+console.log('Process running with id: ', process.getuid());
+console.log('Process running with uid: ', process.geteuid());
+try {
+  process.setuid(0);
+  process.seteuid(0);
+} catch (err) {
+  console.log(err);
+}
 
 app.listen(SERVER_PORT);
 console.log(
